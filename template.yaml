@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  HttpApi:
+    Type: AWS::Serverless::HttpApi
+    Properties:
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowHeaders:
+          - "*"
+        AllowMethods:
+          - "*"
+
+  CreatePollFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: rust-cargolambda
+      BuildProperties:
+        Binary: create_poll_lambda
+    Properties:
+      Handler: bootstrap
+      Runtime: provided.al2
+      CodeUri: ./api/
+      Architectures:
+        - x86_64
+      Events:
+        HttpAPI:
+          Type: HttpApi
+          Properties:
+            Path: /create-poll
+            Method: get
+            ApiId:
+              Ref: HttpApi
+
+  AddQuestionFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: rust-cargolambda
+      BuildProperties:
+        Binary: add_question_lambda
+    Properties:
+      Handler: bootstrap
+      Runtime: provided.al2
+      CodeUri: ./api/
+      Architectures:
+        - x86_64
+      Events:
+        HttpAPI:
+          Type: HttpApi
+          Properties:
+            Path: /add-question
+            Method: get
+            ApiId:
+              Ref: HttpApi
+  PollsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      AttributeDefinitions:
+        - AttributeName: pollId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: pollId
+          KeyType: HASH
+      BillingMode: PAY_PER_REQUEST
+      TableName: polls

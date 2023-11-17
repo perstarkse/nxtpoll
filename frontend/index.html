@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>nxtPoll - next level polling</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./node_modules/htmx.org/dist/htmx.min.js" ></script>
+</head>
+<body class="flex flex-col min-h-screen ">
+    <nav class="bg-slate-200 p-4">
+        <div class="container mx-auto flex items-center justify-between">
+          <!-- Logo section -->
+          <div>
+            <!-- <img src="./assets/a0cbd613-a2ab-4846-a61d-619058e49df8.webp.png" style="max-height: 50px;" alt=""> -->
+            <a href="#" class="text-xl font-semibold text-gray-700 hover:text-gray-900">nxtPoll</a>
+          </div>
+      
+          <!-- Navigation links -->
+          <div class="hidden md:flex space-x-4">
+            <!-- <a href="#" class="text-gray-700 hover:text-gray-900">Kom-igång-guide</a>
+            <a href="#" class="text-gray-700 hover:text-gray-900">Higher Ed</a> -->
+      
+          </div>
+      
+          <!-- Action buttons -->
+          <div class="space-x-2">
+            <a href="#" class="px-4 py-2 text-gray-700 hover:text-gray-900">Log in</a>
+            <a href="#" class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">Sign up</a>
+          </div>
+        </div>
+    </nav>
+    <section class="bg-slate-50 py-24 px-6 md:px-0 flex-grow relative">
+      <div id="container" class="container mx-auto">
+        <div class="flex py-24 flex-col md:flex-row items-center md:space-x-4 lg:space-x-8 justify-start">
+          <!-- Left column -->
+          <div class="w-full md:w-1/2 mb-16 md:mb-0 flex flex-col items-center md:items-start">
+            <h1 class="text-5xl font-extrabold text-gray-700 mb-6 text-center md:text-left">Create your next poll here</h1>
+            <p class="text-gray-700 mb-6 text-center md:text-left">Here you can simply and easily create a poll that's also easy for respondends to answer. We also support <strong>quantative voting</strong>, which is a method to increase the amount of knowledge you get from your next poll.</p>
+            <div class="space-x-2">
+              <button hx-get="http://localhost:3000/create-poll" 
+              hx-target="#container" 
+              hx-swap="innerHTML"
+              hx-indicator="#indicator" 
+              class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">
+              Create poll
+              </button>
+              <button class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600">Respond to poll</button>
+            </div>
+          </div>
+    
+          <!-- Right column -->
+          <div class="w-full md:w-1/2 flex justify-center md:justify-end">
+            <img src="./assets/analysis.svg" alt="Hero image">
+          </div>
+        </div>
+      </div>
+      <img class="htmx-indicator absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50" src="assets/svg-loaders/hearts.svg" id="indicator" style="height: 100px;">
+    </section>
+    
+    <footer class="bg-slate-50 flex items-center justify-center p-4">
+      <p class="font-serif">built with htmx, rust and aws services 🚀</p>
+    </footer>
+</body>
+<script>  
+
+  function setApiUrl() {
+    const apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://production-url.com';
+    const createPollButton = document.querySelector('button[hx-get="http://localhost:3000/create-poll"]');
+    if (createPollButton) {
+      createPollButton.setAttribute('hx-get', `${apiUrl}/create-poll`);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', setApiUrl);
+</script>
+</body>
+</html>
