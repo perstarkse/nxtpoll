@@ -1,4 +1,4 @@
-# eziPoll
+# nxtPoll
 
 ## frontend:
 ```tailwindcss -i uncompiled.css -o ./style.css --watch``` <br>
