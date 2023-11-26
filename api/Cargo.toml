@@ -3,17 +3,8 @@ name = "backend"
 version = "0.1.0"
 edition = "2021"
 
-
 [lib]
 path = "src/lib.rs"
-
-[[bin]]
-name = "hello_world_lambda"
-path = "src/hello_world/hello_world.rs"
-
-[[bin]]
-name = "good_morning_lambda"
-path = "src/good_morning/good_morning.rs"
 
 [[bin]]
 name = "add_question_lambda"
@@ -25,11 +16,17 @@ path = "src/polls/create_poll.rs"
 
 [dependencies]
 askama = "0.12.1"
+aws-config = { version = "0.101.0", features = ["behavior-version-latest"] }
+aws-sdk-dynamodb = "0.38.0"
 lambda_http = "0.8.3"
 lambda_runtime = "0.8.3"
 log = "0.4.20"
+serde = {version = "1.0.193", features = ["derive"]}
+serde_derive = "1.0.193"
+serde_json = "1.0.108"
 simple_logger = "4.2.0"
 tokio = { version = "1", features = ["macros"] }
 tracing = { version = "0.1", features = ["log"] }
 tracing-subscriber = { version = "0.3", default-features = false, features = ["fmt"] }
+uuid = { version = "1.6.1", features = ["v4"] }
 

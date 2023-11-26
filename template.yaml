@@ -50,7 +50,7 @@ Resources:
           Type: HttpApi
           Properties:
             Path: /add-question
-            Method: get
+            Method: post
             ApiId:
               Ref: HttpApi
   PollsTable:

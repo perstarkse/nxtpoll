@@ -12,20 +12,21 @@
       </ul>
       <p class="mb-4">This approach goes beyond merely tallying opinions, by quantifying the intensity behind them, making it invaluable in contexts where understanding the depth of group sentiment is as important as knowing the predominant view.</p>        
       <h2 class="text-xl font-semibold mb-2">Ready to Create Your Poll? Start Here!</h2>
-      <div class="w-auto mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
-          Poll title
-        </label>
-        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="title" name="title" type="text" placeholder="Title">
-      </div>
-      <div class="w-auto mb-4">
-        <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
-          Poll description
-        </label>
-        <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" style="min-height: 80px;" id="description" name="description" placeholder="Description"></textarea>
-      </div>        
-      <button class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 focus:outline-none focus:shadow-outline" hx-get="http://localhost:3000/add-question" hx-target="#container" hx-swap="innerHTML">Add questions</button>
-    </div>
+      <form hx-post="http://localhost:3000/add-question" hx-target="#container" hx-swap="innerHTML">
+        <div class="w-auto mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="title">
+                Poll title
+            </label>
+            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="title" name="title" type="text" placeholder="Title">
+        </div>
+        <div class="w-auto mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2" for="description">
+                Poll description
+            </label>
+            <textarea class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" style="min-height: 80px;" id="description" name="description" placeholder="Description"></textarea>
+        </div>        
+        <button type="submit" class="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 focus:outline-none focus:shadow-outline">Add questions</button>
+    </form>    
   </div>
 </div>
 
