@@ -11,6 +11,26 @@ Resources:
           - "*"
         AllowMethods:
           - "*"
+  SaveQuestionFunction:
+    Type: AWS::Serverless::Function
+    Metadata:
+      BuildMethod: rust-cargolambda
+      BuildProperties:
+        Binary: save_question_lambda
+    Properties:
+      Handler: bootstrap
+      Runtime: provided.al2
+      CodeUri: ./api/
+      Architectures:
+        - x86_64
+      Events:
+        HttpAPI:
+          Type: HttpApi
+          Properties:
+            Path: /save-question
+            Method: get
+            ApiId:
+              Ref: HttpApi
 
   CreatePollFunction:
     Type: AWS::Serverless::Function
@@ -38,7 +58,7 @@ Resources:
     Metadata:
       BuildMethod: rust-cargolambda
       BuildProperties:
-        Binary: add_question_lambda
+        Binary: poll_form_lambda
     Properties:
       Handler: bootstrap
       Runtime: provided.al2
@@ -49,7 +69,7 @@ Resources:
         HttpAPI:
           Type: HttpApi
           Properties:
-            Path: /add-question
+            Path: /poll-form
             Method: post
             ApiId:
               Ref: HttpApi

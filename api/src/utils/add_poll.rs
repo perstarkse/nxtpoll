@@ -1,15 +1,15 @@
 use aws_sdk_dynamodb::types::AttributeValue;
 use aws_sdk_dynamodb::{Client, Error};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Poll {
-    pub pollId: String,
+    pub poll_id: String,
     pub title: String,
     pub description: String,
 }
 
 pub async fn add_poll(client: &Client, poll: Poll, table: &String) -> Result<bool, Error> {
-    let id_av = AttributeValue::S(poll.pollId);
+    let id_av = AttributeValue::S(poll.poll_id);
     let title_av = AttributeValue::S(poll.title);
     let description_av = AttributeValue::S(poll.description);
 

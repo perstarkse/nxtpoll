@@ -5,24 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>nxtPoll - next level polling</title>
     <link rel="stylesheet" href="./style.css">
-    <script src="./node_modules/htmx.org/dist/htmx.min.js" ></script>
+    <script src="./node_modules/htmx.org/dist/htmx.min.js"></script>
 </head>
-<body class="flex flex-col min-h-screen ">
+<body class="flex flex-col min-h-screen">
     <nav class="bg-slate-200 p-4">
         <div class="container mx-auto flex items-center justify-between">
           <!-- Logo section -->
           <div>
-            <!-- <img src="./assets/a0cbd613-a2ab-4846-a61d-619058e49df8.webp.png" style="max-height: 50px;" alt=""> -->
-            <a href="#" class="text-xl font-semibold text-gray-700 hover:text-gray-900">nxtPoll</a>
+            <a href="#" id="nxtPollLink" class="text-xl font-semibold text-gray-700 hover:text-gray-900">nxtPoll</a>
           </div>
-      
-          <!-- Navigation links -->
-          <div class="hidden md:flex space-x-4">
-            <!-- <a href="#" class="text-gray-700 hover:text-gray-900">Kom-igång-guide</a>
-            <a href="#" class="text-gray-700 hover:text-gray-900">Higher Ed</a> -->
-      
-          </div>
-      
           <!-- Action buttons -->
           <div class="space-x-2">
             <a href="#" class="px-4 py-2 text-gray-700 hover:text-gray-900">Log in</a>
@@ -38,7 +29,7 @@
             <h1 class="text-5xl font-extrabold text-gray-700 mb-6 text-center md:text-left">Create your next poll here</h1>
             <p class="text-gray-700 mb-6 text-center md:text-left">Here you can simply and easily create a poll that's also easy for respondends to answer. We also support <strong>quantative voting</strong>, which is a method to increase the amount of knowledge you get from your next poll.</p>
             <div class="space-x-2">
-              <button hx-get="http://localhost:3000/create-poll" 
+              <button id="createPollButton" hx-get="http://localhost:3000/create-poll" 
               hx-target="#container" 
               hx-swap="innerHTML"
               hx-indicator="#indicator" 
@@ -61,18 +52,70 @@
     <footer class="bg-slate-50 flex items-center justify-center p-4">
       <p class="font-serif">built with htmx, rust and aws services 🚀</p>
     </footer>
-</body>
-<script>  
 
-  function setApiUrl() {
-    const apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://production-url.com';
-    const createPollButton = document.querySelector('button[hx-get="http://localhost:3000/create-poll"]');
-    if (createPollButton) {
-      createPollButton.setAttribute('hx-get', `${apiUrl}/create-poll`);
-    }
-  }
+    <!-- Modal HTML -->
+    <div id="resetModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+      <div class="bg-white p-4 rounded">
+        <p>Are you sure you want to reset to the initial state? Any unsaved changes will be lost.</p>
+        <div class="flex justify-end space-x-2 mt-4">
+          <button id="confirmReset" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Yes</button>
+          <button id="cancelReset" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">No</button>
+        </div>
+      </div>
+    </div>
 
-  document.addEventListener('DOMContentLoaded', setApiUrl);
-</script>
+    <!-- Scripts -->
+    <script>
+      let initialState;
+
+      function saveInitialState() {
+        const container = document.getElementById('container');
+        initialState = container.innerHTML;
+      }
+
+      function resetContent() {
+        const container = document.getElementById('container');
+        container.innerHTML = initialState;
+        htmx.process(container); // Reinitialize HTMX
+        attachEventListeners();
+      }
+
+      function attachEventListeners() {
+        const resetModal = document.getElementById('resetModal');
+        const nxtPollLink = document.getElementById('nxtPollLink');
+        const confirmReset = document.getElementById('confirmReset');
+        const cancelReset = document.getElementById('cancelReset');
+
+        nxtPollLink.addEventListener('click', (event) => {
+          event.preventDefault();
+          resetModal.classList.remove('hidden');
+        });
+
+        confirmReset.addEventListener('click', () => {
+          resetContent();
+          resetModal.classList.add('hidden');
+        });
+
+        cancelReset.addEventListener('click', () => {
+          resetModal.classList.add('hidden');
+        });
+
+        setApiUrl();
+      }
+
+      function setApiUrl() {
+        const apiUrl = window.location.hostname === 'localhost' ? 'http://localhost:3000' : 'https://production-url.com';
+        const createPollButton = document.getElementById('createPollButton');
+        if (createPollButton) {
+          createPollButton.setAttribute('hx-get', `${apiUrl}/create-poll`);
+        }
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        saveInitialState();
+        attachEventListeners();
+      });
+    </script>
 </body>
 </html>
+

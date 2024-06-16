@@ -1,14 +1,11 @@
 use askama::Template;
-use aws_config::{load_from_env, SdkConfig};
+use aws_config::load_from_env;
 use aws_sdk_dynamodb::Client;
 use backend::utils::add_poll::add_poll;
 use backend::utils::add_poll::Poll;
 use backend::utils::html_response::build;
-use lambda_http::request::from_str;
-use lambda_http::RequestExt;
 use lambda_http::RequestPayloadExt;
 use lambda_http::{run, service_fn, Body, Error, Request, Response};
-use lambda_runtime::Context;
 use log::error;
 use log::Level;
 use serde::Deserialize;
@@ -21,26 +18,34 @@ struct FormData {
 }
 
 #[derive(Template)]
-#[template(path = "add-question.html")]
-struct AddQuestionTemplate {}
+#[template(path = "poll_form.html")]
+struct AddQuestionTemplate {
+    poll_id: String,
+    description: String,
+    title: String,
+}
 
 pub async fn add_question_handler(event: Request) -> Result<Response<Body>, Error> {
-    let template = AddQuestionTemplate {};
-
     let formdata: FormData = event
         .payload()
         .unwrap_or_else(|_parse_err| None)
         .unwrap_or_default();
 
-    log::info!("Form data: {:?}", formdata);
+    let id = Uuid::new_v4().to_string();
+    let title = formdata.title.to_string();
+    let description = formdata.description.to_string();
 
-    let poll = Poll {
-        pollId: Uuid::new_v4().to_string(),
-        title: formdata.title.to_string(),
-        description: formdata.description.to_string(),
+    let template = AddQuestionTemplate {
+        poll_id: id.clone(),
+        description: description.clone(),
+        title: title.clone(),
     };
 
-    log::info!("Poll: {:?}", poll);
+    let poll = Poll {
+        poll_id: id,
+        title,
+        description,
+    };
 
     let result = add_poll(
         &Client::new(&load_from_env().await),
