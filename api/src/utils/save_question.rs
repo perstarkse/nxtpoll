@@ -8,7 +8,7 @@ pub struct SaveQuestion {
     pub alternatives: Vec<String>,
 }
 
-pub async fn save_question(
+pub async fn save_question_fn(
     client: &Client,
     question: SaveQuestion,
     table: &String,
