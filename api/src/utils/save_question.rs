@@ -36,7 +36,8 @@ pub async fn save_question_fn(
         .collect(),
     );
 
-    // Update the existing poll with the new question
+    let question_list = AttributeValue::L(vec![question_object]);
+
     let request = client
         .update_item()
         .table_name(table)
@@ -45,7 +46,7 @@ pub async fn save_question_fn(
             "SET questions = list_append(if_not_exists(questions, :empty_list), :question)",
         )
         .expression_attribute_values(":empty_list", AttributeValue::L(vec![]))
-        .expression_attribute_values(":question", question_object);
+        .expression_attribute_values(":question", question_list);
 
     let response = request.send().await;
 

@@ -1,7 +1,8 @@
 use askama::Template;
 use aws_config::load_from_env;
 use aws_sdk_dynamodb::Client;
-use backend::models::poll::Poll;
+use backend::models::poll::Question;
+use backend::utils::get_poll::get_poll;
 use backend::utils::html_response::build;
 use backend::utils::save_question::save_question_fn;
 use backend::utils::save_question::SaveQuestion;
@@ -10,8 +11,10 @@ use lambda_http::{run, service_fn, Body, Error, Request, Response};
 use log::error;
 use log::Level;
 use serde::Deserialize;
+use serde_urlencoded::Deserializer;
 
 #[derive(Deserialize, Debug, Default)]
+
 struct FormData {
     poll_id: String,
     question: String,
@@ -21,14 +24,18 @@ struct FormData {
 #[derive(Template)]
 #[template(path = "saved-questions-list.html")]
 struct QuestionListTemplate {
-    questions: Vec<String>, // Array of question strings
+    questions: Vec<Question>, // Array of question strings
 }
 
 pub async fn save_question_handler(event: Request) -> Result<Response<Body>, Error> {
+    log::info!("Request payload: {:?}", event);
+
     let formdata: FormData = event
         .payload()
         .unwrap_or_else(|_parse_err| None)
         .unwrap_or_default();
+
+    log::info!("Form data: {:?}", formdata);
 
     let poll_id = formdata.poll_id.clone();
     let question = formdata.question.clone();
@@ -46,7 +53,7 @@ pub async fn save_question_handler(event: Request) -> Result<Response<Body>, Err
 
     log::info!("Result: {:?}", result);
 
-    let retrieved_poll: Poll = get_poll(formdata.poll_id.clone()).await;
+    let retrieved_poll = get_poll(&client, &formdata.poll_id.clone(), &"polls".to_string()).await?;
 
     let template = QuestionListTemplate {
         questions: retrieved_poll.questions,

@@ -455,6 +455,7 @@ dependencies = [
  "lambda_runtime",
  "log",
  "serde",
+ "serde_urlencoded",
  "simple_logger",
  "tokio",
  "tracing",

@@ -9,3 +9,10 @@ pub struct Question {
     pub question: String,
     pub alternatives: Vec<String>,
 }
+use std::fmt;
+
+impl fmt::Display for Question {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.question)
+    }
+}

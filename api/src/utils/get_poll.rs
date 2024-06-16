@@ -3,7 +3,7 @@ use lambda_http::Error;
 
 use crate::models::poll::{Poll, Question};
 
-pub async fn get_poll(client: &Client, poll_id: String, table: &String) -> Result<Poll, Error> {
+pub async fn get_poll(client: &Client, poll_id: &String, table: &String) -> Result<Poll, Error> {
     let request = client
         .get_item()
         .table_name(table)

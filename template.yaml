@@ -11,6 +11,7 @@ Resources:
           - "*"
         AllowMethods:
           - "*"
+          
   SaveQuestionFunction:
     Type: AWS::Serverless::Function
     Metadata:
@@ -28,7 +29,7 @@ Resources:
           Type: HttpApi
           Properties:
             Path: /save-question
-            Method: get
+            Method: post
             ApiId:
               Ref: HttpApi
 
@@ -73,6 +74,7 @@ Resources:
             Method: post
             ApiId:
               Ref: HttpApi
+
   PollsTable:
     Type: AWS::DynamoDB::Table
     Properties:

@@ -26,6 +26,8 @@ struct AddQuestionTemplate {
 }
 
 pub async fn add_question_handler(event: Request) -> Result<Response<Body>, Error> {
+    log::info!("Request payload: {:?}", event);
+
     let formdata: FormData = event
         .payload()
         .unwrap_or_else(|_parse_err| None)

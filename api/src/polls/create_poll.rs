@@ -7,7 +7,7 @@ use log::{error, Level};
 #[template(path = "create-poll.html")]
 struct CreatePollTemplate {}
 
-pub async fn create_poll_handler(event: Request) -> Result<Response<Body>, Error> {
+pub async fn create_poll_handler(_event: Request) -> Result<Response<Body>, Error> {
     let template = CreatePollTemplate {};
 
     match template.render() {
